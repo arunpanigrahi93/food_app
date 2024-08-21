@@ -1,8 +1,20 @@
-import React, { useContext } from "react";
+import React from "react";
 import "./PlaceOrder.css";
-import { StoreContext } from "../../context/StoreContext";
+import { useSelector } from "react-redux";
+
 const PlaceOrder = () => {
-  const { getTotalCartAmount } = useContext(StoreContext);
+  // Using useSelector to get cartItems and food_list from the Redux store
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const foodList = useSelector((state) => state.cart.food_list);
+
+  // Function to calculate the total cart amount
+  const getTotalCartAmount = () => {
+    return Object.keys(cartItems).reduce((total, itemId) => {
+      const itemInfo = foodList.find((product) => product._id === itemId);
+      return total + itemInfo.price * cartItems[itemId];
+    }, 0);
+  };
+
   return (
     <form className="place-order">
       <div className="place-order-left">

@@ -1,12 +1,21 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import "./Navbar.css";
 import { assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
-import { StoreContext } from "../../context/StoreContext";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ setShowLogin }) => {
   const [menu, setMenu] = useState("menu");
-  const { getCartItemsCount } = useContext(StoreContext);
+
+  // Using useSelector to get the cart items from the Redux store
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+  const getCartItemsCount = () => {
+    return Object.values(cartItems).reduce(
+      (acc, itemCount) => acc + itemCount,
+      0
+    );
+  };
 
   return (
     <div className="navbar">
