@@ -1,0 +1,69 @@
+.header{
+    /* height: 34vw;
+    margin: 30px auto; */
+    /* background: url('E:\React\food delivery\food\public\header_img.png')no-repeat; */
+    display: flex;
+    justify-content: center; /* Centers the image horizontally */
+    align-items: center; /* Centers the image vertically */
+    height: 400px; /* Adjust the height based on your layout */
+    overflow: hidden; /* Ensures the image doesn't overflow the container */
+    border-radius: 15px; /* Gives the image rounded corners like in your design */
+    background-color: #ffffff; /* Adds a background color to match the design */
+}
+
+.header-img{
+    max-width: 100%; /* Ensures the image scales properly */
+    height: auto; /* Maintains the aspect ratio */
+    object-fit: cover; /* Ensures the image covers the container without stretching */
+}
+.header-contents{
+    display: flex;
+
+ 
+    flex-direction: column;
+    align-items: start;
+    gap: 1.5vw;
+    bottom: 10%;
+    
+    animation: fadeIn 3s;
+}
+
+.header-contents h2{
+    font-weight: 500;
+    color: white;
+    font-size: max(4.5vw,22px);
+}
+.header-contents p{
+    color: white;
+    font-size: 1vw;
+}
+.header-contents button{
+    border: none;
+    color: #747474;
+    font-weight: 500;
+    padding: 1vw 2.3vw;
+    background-color: white;
+    font-size: max(1vw,13px);
+    border-radius: 50px;
+}
+
+@media (max-width:1050px){
+
+    .header-contents{
+        max-width: 45%;
+    }
+}
+@media (max-width:750px){
+
+    .header-contents{
+        max-width: 65%;
+    }
+
+    .header-contents p{
+        display: none;
+    }
+
+    .header-contents button{
+        padding: 2ve 4vw;
+    }
+}
