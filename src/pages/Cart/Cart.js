@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./Cart.css";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addToCart, removeFromCart } from "../../redux/cartSlice"; // Adjust path as needed
+import {
+  addToCart,
+  removeFromCart,
+  removeAllFromCart,
+} from "../../redux/cartSlice"; // Adjust path as needed
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -105,7 +109,7 @@ const Cart = () => {
                   </div>
                   <p>${item.price * cartItems[item._id]}</p>
                   <p
-                    onClick={() => dispatch(removeFromCart(item._id))}
+                    onClick={() => dispatch(removeAllFromCart(item._id))}
                     className="cross"
                   >
                     x
