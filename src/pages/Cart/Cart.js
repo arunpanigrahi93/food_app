@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Cart.css";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,18 @@ const Cart = () => {
   const foodList = useSelector((state) => state.cart.food_list);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Dummy promo codes and their discounts
+  const promoCodes = {
+    SAVE10: 10, // 10% discount
+    DISCOUNT5: 5, // $5 discount
+    FREESHIP: 2, // Free shipping (equivalent to delivery fee)
+  };
+
+  const [promoCode, setPromoCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [discountedTotal, setDiscountedTotal] = useState(0);
 
   // Calculate total amount
   const getTotalCartAmount = () => {
@@ -23,6 +35,37 @@ const Cart = () => {
     }
     return totalAmount;
   };
+
+  const handlePromoCodeSubmit = () => {
+    if (promoCodes[promoCode]) {
+      setDiscount(promoCodes[promoCode]);
+      setErrorMessage("");
+    } else {
+      setDiscount(0);
+      setErrorMessage("Invalid promo code");
+    }
+  };
+
+  // Calculate the total after applying the promo code
+  const calculateDiscountedTotal = () => {
+    const subtotal = getTotalCartAmount();
+    let totalWithDiscount = subtotal;
+
+    if (promoCode === "SAVE10") {
+      totalWithDiscount = subtotal - (subtotal * discount) / 100;
+    } else {
+      totalWithDiscount = subtotal - discount;
+    }
+
+    return Math.max(totalWithDiscount, 0).toFixed(2);
+  };
+
+  useEffect(() => {
+    const updatedTotal = calculateDiscountedTotal();
+    setDiscountedTotal(
+      parseFloat(updatedTotal) + (getTotalCartAmount() === 0 ? 0 : 2)
+    );
+  }, [discount, cartItems]);
 
   return (
     <div className="cart">
@@ -80,7 +123,7 @@ const Cart = () => {
             <div>
               <div className="cart-total-details">
                 <p>Subtotal</p>
-                <p>${getTotalCartAmount()}</p>
+                <p>${getTotalCartAmount().toFixed(2)}</p>
               </div>
               <hr />
               <div className="cart-total-details">
@@ -88,14 +131,25 @@ const Cart = () => {
                 <p>${getTotalCartAmount() === 0 ? 0 : 2}</p>
               </div>
               <hr />
+              {discount > 0 && (
+                <>
+                  <div className="cart-total-details">
+                    <p>Discount</p>
+                    <p>{promoCode === "SAVE10" ? `10%` : `-$${discount}`}</p>
+                  </div>
+                  <hr />
+                </>
+              )}
               <div className="cart-total-details">
                 <b>Total</b>
-                <b>
-                  ${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}
-                </b>
+                <b>${discountedTotal.toFixed(2)}</b>
               </div>
             </div>
-            <button onClick={() => navigate("/order")}>
+            <button
+              onClick={() =>
+                navigate("/order", { state: { total: discountedTotal } })
+              }
+            >
               PROCEED TO CHECKOUT
             </button>
           </div>
@@ -104,9 +158,15 @@ const Cart = () => {
             <div>
               <p>If you have a promo code, Enter it here</p>
               <div className="cart-promocode-input">
-                <input type="text" placeholder="promo code" />
-                <button>Submit</button>
+                <input
+                  type="text"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value)}
+                  placeholder="promo code"
+                />
+                <button onClick={handlePromoCodeSubmit}>Submit</button>
               </div>
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
           </div>
         </div>
