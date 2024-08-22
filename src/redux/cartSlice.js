@@ -1,4 +1,3 @@
-// src/redux/cartSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 import { food_list } from "../assets/assets";
 
@@ -17,6 +16,7 @@ const cartSlice = createSlice({
         ? state.cartItems[itemId] + 1
         : 1;
     },
+
     removeFromCart: (state, action) => {
       const itemId = action.payload;
       if (state.cartItems[itemId]) {
