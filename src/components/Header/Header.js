@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React from "react";
 import "./Header.css";
 import background from "../../assets/header_img.png";
 const Header = () => {
